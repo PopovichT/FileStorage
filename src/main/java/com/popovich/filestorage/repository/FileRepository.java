@@ -7,6 +7,4 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface FileRepository extends ElasticsearchRepository<File, String> {
-    List<File> findAllByNameOrderBySize(String name, Pageable pageable);
-    Integer countAllByName(String name);
 }

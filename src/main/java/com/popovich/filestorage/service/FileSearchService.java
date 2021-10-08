@@ -31,11 +31,11 @@ public class FileSearchService {
 
         if ((tags == null) || (tags.isEmpty())) {
             Pageable pagination = PageRequest.of(page, size);
-            var allResult = repository.findAllByNameOrderBySize("", pagination);
-            var allCount = repository.countAllByName("");
+            var allResult = repository.findAll(pagination);
+            var allCount = repository.count();
             return ResponseFileListDto.builder()
-                    .page(allResult)
-                    .total(allCount)
+                    .page(allResult.getContent())
+                    .total((int) allCount)
                     .build();
         }
 

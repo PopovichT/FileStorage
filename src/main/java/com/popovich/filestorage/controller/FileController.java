@@ -1,15 +1,11 @@
 package com.popovich.filestorage.controller;
 
-import com.popovich.filestorage.document.File;
 import com.popovich.filestorage.dto.RequestUploadDto;
 import com.popovich.filestorage.dto.ResponseDto;
 import com.popovich.filestorage.dto.ResponseFileListDto;
 import com.popovich.filestorage.service.FileSearchService;
 import com.popovich.filestorage.service.FileService;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

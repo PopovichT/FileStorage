@@ -2,10 +2,8 @@ package com.popovich.filestorage.service;
 
 import com.popovich.filestorage.document.File;
 import com.popovich.filestorage.dto.RequestUploadDto;
-import com.popovich.filestorage.dto.ResponseFileListDto;
 import com.popovich.filestorage.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.rmi.NoSuchObjectException;

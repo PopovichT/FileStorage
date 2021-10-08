@@ -23,7 +23,7 @@ public class RestResponseExceptionHandler {
         var customError = ErrorDto.builder()
                 .success(false)
                 .error(ExceptionUtils.getMessage(ex))
-                .root(ExceptionUtils.getRootCauseMessage(ex))
+                .root(ExceptionUtils.getStackTrace(ex))
                 .date(ZonedDateTime.ofInstant(Instant.now(), zoneId))
                 .build();
         return new ResponseEntity<>(customError, status);

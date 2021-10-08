@@ -1,42 +1,52 @@
 package com.popovich.filestorage.service;
 
+import com.popovich.filestorage.document.File;
 import com.popovich.filestorage.dto.ResponseFileListDto;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import com.popovich.filestorage.repository.FileRepository;
+import com.popovich.filestorage.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileSearchService {
 
-    private final RestHighLevelClient highLevelClient;
-    private final RestClient client;
+    private final ElasticsearchRestTemplate template;
+    private final FileRepository repository;
 
     @Autowired
-    public FileSearchService(RestHighLevelClient highLevelClient){
-        this.highLevelClient = highLevelClient;
-        this.client = highLevelClient.getLowLevelClient();
+    public FileSearchService(ElasticsearchRestTemplate template, FileRepository repository) {
+        this.template = template;
+        this.repository = repository;
     }
 
-    public ResponseFileListDto getFilteredList(List<String> tags, Integer page, Long size) {
+    public ResponseFileListDto getFilteredList(List<String> tags, Integer page, Integer size) {
 
-        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
-                .should(QueryBuilders.termsQuery("tags", tags));
-        IndexRequest request = new IndexRequest("fileindex");
-//        highLevelClient.
-//        var searsh = prepareSearch("mongoindex")
-//                .setSearchType(SearchType.QUERY_AND_FETCH)
-//                .setQuery(boolQuery)
-//                .setFrom(0).setSize(60).setExplain(true)
-//                .execute()
-//                .actionGet();
-        return null;
+        if ((tags == null) || (tags.isEmpty())) {
+            Pageable pagination = PageRequest.of(page, size);
+            var allResult = repository.findAllByNameOrderBySize("", pagination);
+            var allCount = repository.countAllByName("");
+            return ResponseFileListDto.builder()
+                    .page(allResult)
+                    .total(allCount)
+                    .build();
+        }
+
+        var query = SearchUtil.getQueryBuilder(tags);
+        var count = template.count(query.build(), File.class, IndexCoordinates.of("file"));
+        var hits = template.search(query.withPageable(PageRequest.of(page, size)).build(), File.class, IndexCoordinates.of("file"));
+        var addresses = hits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+
+        return ResponseFileListDto.builder()
+                .page(addresses)
+                .total((int) count)
+                .build();
     }
 }

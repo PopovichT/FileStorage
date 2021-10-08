@@ -71,9 +71,7 @@ public class FileController {
     }
 
     @GetMapping
-    public ResponseFileListDto getFilteredList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false) Integer page, @RequestParam(required = false) Long size) {
-         searchService.getFilteredList(tags, page, size);
-         var responseDto = ResponseDto.builder().success(true).build();
-         return null;
+    public ResponseFileListDto getFilteredList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size) {
+         return searchService.getFilteredList(tags, page, size);
     }
 }

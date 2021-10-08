@@ -23,6 +23,6 @@ public class File {
     @Field(type = FieldType.Long, name = "size")
     private Long size;
 
-    @Field(type = FieldType.Nested, includeInParent = true, name = "tags")
+    @Field(type = FieldType.Keyword, includeInParent = true, name = "tags")
     private Set<String> tags;
 }

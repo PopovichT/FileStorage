@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
 
 public final class SearchUtil {
 
@@ -17,7 +18,8 @@ public final class SearchUtil {
         var query = new NativeSearchQueryBuilder();
 
         for (String word : tags) {
-            query.withQuery(matchQuery("tags", word).operator(Operator.AND));
+            query.withQuery(termsQuery("tags", word));
+//            query.withQuery(matchQuery("tags", word).operator(Operator.AND)); <---It's much more yummi for tag evaluation
         }
 
         return query;

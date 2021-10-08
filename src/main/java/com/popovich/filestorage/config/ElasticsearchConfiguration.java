@@ -31,7 +31,7 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
     }
 
     @Bean
-    public ElasticsearchOperations elasticsearchOps() {
+    public ElasticsearchRestTemplate elasticsearchOps() {
         return new ElasticsearchRestTemplate(elasticsearchClient());
     }
 }

@@ -33,9 +33,9 @@ public class FileController {
         return responseDto;
     }
 
-    @PostMapping("/ping")
-    public String ping(@RequestParam String param) {
-        return param;
+    @PutMapping
+    public String ping() throws Exception {
+        return "ping";
     }
 
 
@@ -66,8 +66,13 @@ public class FileController {
         else throw new Exception("service tag deleting error");
     }
 
+    @GetMapping("/name")
+    public ResponseFileListDto getList(@RequestParam(required = false) String q) {
+        return searchService.getList(q);
+    }
+
     @GetMapping
-    public ResponseFileListDto getFilteredList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size) {
+    public ResponseFileListDto getFilteredList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size, @RequestParam(required = false) String q) {
          return searchService.getFilteredList(tags, page, size);
     }
 }

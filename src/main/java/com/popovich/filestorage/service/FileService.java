@@ -22,15 +22,25 @@ public class FileService {
     }
 
     public File addFile(RequestUploadDto dto) {
+        HashSet<String> tags = new HashSet<>();
+        if (dto.getName().contains(".")) {
+            String ext = dto.getName().toLowerCase().substring(dto.getName().lastIndexOf(".") + 1);
+            tags.add(ext);
+        }
+
         var file = File.builder()
                 .name(dto.getName())
                 .size(dto.getSize())
-                .tags(new HashSet<>())
+                .tags(tags)
                 .build();
         return repository.save(file);
     }
 
-    public Boolean deleteFile(String ID) {
+    public Boolean deleteFile(String ID) throws NoSuchObjectException {
+        var resultOpt = repository.findById(ID);
+        if (resultOpt.isEmpty()) {
+            throw new NoSuchObjectException("no such object");
+        }
         repository.deleteById(ID);
         return true;
     }
@@ -63,14 +73,6 @@ public class FileService {
         repository.save(file);
         return response;
     }
-
-//    public ResponseFileListDto getFilteredList(List<String> tags, Integer page, Long size) {
-//        var result = repository.searchInBody(new JSONArray(tags));
-//        return ResponseFileListDto.builder()
-//                .page(result)
-//                .total(10)
-//                .build();
-//    }
 
     public static <T> Set<T> mergeSet(Set<T> a, Set<T> b) {
         return new HashSet<T>() {

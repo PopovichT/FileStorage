@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
+
 @Service
 public class FileSearchService {
 
@@ -40,6 +43,7 @@ public class FileSearchService {
         }
 
         var query = SearchUtil.getQueryBuilder(tags);
+//        query.withQuery(matchQuery("name", tags));
         var count = template.count(query.build(), File.class, IndexCoordinates.of("file"));
         var hits = template.search(query.withPageable(PageRequest.of(page, size)).build(), File.class, IndexCoordinates.of("file"));
         var addresses = hits.stream().map(SearchHit::getContent).collect(Collectors.toList());
@@ -47,6 +51,14 @@ public class FileSearchService {
         return ResponseFileListDto.builder()
                 .page(addresses)
                 .total((int) count)
+                .build();
+    }
+
+    public ResponseFileListDto getList(String q) {
+        var result = repository.findByNameContainingIgnoreCase(q);
+        return ResponseFileListDto.builder()
+                .page(result)
+                .total(123)
                 .build();
     }
 }

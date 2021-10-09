@@ -7,17 +7,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 
 import java.rmi.NoSuchObjectException;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ContextConfiguration
 public class FileServiceTest {
 
     @MockBean
@@ -25,6 +27,7 @@ public class FileServiceTest {
 
     @Autowired
     private FileService service;
+
 
     @Test
     void shouldServiceAddFileWithCorrectInputs() {
@@ -36,6 +39,7 @@ public class FileServiceTest {
 
     @Test
     void shouldServiceDeleteFile() throws NoSuchObjectException {
+        when(repository.findById(any())).thenReturn(Optional.of(FileObjectMother.valid().build()));
         service.deleteFile("qwe");
         verify(repository).deleteById(any());
     }
@@ -56,5 +60,11 @@ public class FileServiceTest {
         when(repository.findById(any())).thenReturn(Optional.of(file));
         service.deleteTags("ID", List.of("asd", "qwe"));
         verify(repository).save(fileToSave);
+    }
+
+    @Test
+    void testtest(){
+        boolean bool = true;
+        assertTrue(bool);
     }
 }

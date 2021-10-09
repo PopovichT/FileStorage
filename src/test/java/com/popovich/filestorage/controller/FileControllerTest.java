@@ -1,13 +1,11 @@
 package com.popovich.filestorage.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.popovich.filestorage.dto.RequestUploadDto;
 import com.popovich.filestorage.mother.FileObjectMother;
 import com.popovich.filestorage.service.FileSearchService;
 import com.popovich.filestorage.service.FileService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,6 +32,9 @@ public class FileControllerTest {
     @MockBean
     private FileService service;
 
+    @MockBean
+    private FileSearchService searchService;
+
     @Test
     void testValidInputProcessedCorrectly() throws Exception {
         when(service.addFile(any())).thenReturn(FileObjectMother.valid().id("ID").build());
@@ -45,8 +46,6 @@ public class FileControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.success").value(true))
                 .andReturn();
-
-
     }
 
     @Test

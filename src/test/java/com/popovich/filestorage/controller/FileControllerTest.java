@@ -62,18 +62,4 @@ public class FileControllerTest {
                 .andExpect(jsonPath("$.error").value("NoSuchObjectException: test message"))
                 .andReturn();
     }
-
-//    @Test
-//    void testShouldPutFileAndReturnSingleFileDto() throws Exception {
-//
-//        var result = noMockService.addFile(new RequestUploadDto("testtest", 125L));
-//        log.info("file is null: {}", result == null);
-//        log.info("file if: {}", result.getId());
-//        mockMvc.perform(get("/file/{ID}", result.getId())
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-////                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-////                .andExpect(jsonPath("$.ID").value(result.getId()))
-//                .andReturn();
-//    }
 }

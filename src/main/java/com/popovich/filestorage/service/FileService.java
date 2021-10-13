@@ -2,6 +2,7 @@ package com.popovich.filestorage.service;
 
 import com.popovich.filestorage.document.File;
 import com.popovich.filestorage.dto.RequestUploadDto;
+import com.popovich.filestorage.dto.SingleFileDto;
 import com.popovich.filestorage.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,14 @@ public class FileService {
             tags.add(ext);
         }
 
+
         var file = File.builder()
                 .name(dto.getName())
                 .size(dto.getSize())
                 .tags(tags)
                 .build();
+        var result = repository.save(file);
+        log.info(result.getId());
         return repository.save(file);
     }
 
@@ -72,6 +76,21 @@ public class FileService {
         file.setTags(savedTags);
         repository.save(file);
         return response;
+    }
+
+    public SingleFileDto getFileById(String ID) throws NoSuchObjectException {
+        var resultOpt = repository.findById(ID);
+        if (resultOpt.isEmpty()) {
+            throw new NoSuchObjectException("File with this ID does not exist");
+        }
+        var resultObj = resultOpt.get();
+        return SingleFileDto.builder()
+                .ID(resultObj.getId())
+                .size(resultObj.getSize())
+                .name(resultObj.getName())
+                .tags(resultObj.getTags())
+                .build();
+
     }
 
     public static <T> Set<T> mergeSet(Set<T> a, Set<T> b) {

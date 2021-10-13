@@ -3,11 +3,13 @@ package com.popovich.filestorage.controller;
 import com.popovich.filestorage.dto.RequestUploadDto;
 import com.popovich.filestorage.dto.ResponseDto;
 import com.popovich.filestorage.dto.ResponseFileListDto;
+import com.popovich.filestorage.dto.SingleFileDto;
 import com.popovich.filestorage.service.FileSearchService;
 import com.popovich.filestorage.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.NoSuchObjectException;
 import java.util.List;
 
 @RestController
@@ -74,5 +76,10 @@ public class FileController {
     @GetMapping
     public ResponseFileListDto getFilteredList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size, @RequestParam(required = false) String q) {
          return searchService.getFilteredList(tags, page, size);
+    }
+
+    @GetMapping("/{ID}")
+    public SingleFileDto getDocumentById(@PathVariable String ID) throws NoSuchObjectException {
+        return service.getFileById(ID);
     }
 }

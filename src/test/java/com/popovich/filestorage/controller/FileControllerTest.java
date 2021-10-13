@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
+@SpringBootTest
 @Slf4j
 public class FileControllerTest {
 
@@ -33,9 +35,6 @@ public class FileControllerTest {
 
     @MockBean
     private FileService service;
-
-    @Autowired
-    private FileService noMockService;
 
     @MockBean
     private FileSearchService searchService;
@@ -64,17 +63,17 @@ public class FileControllerTest {
                 .andReturn();
     }
 
-    @Test
-    void testShouldPutFileAndReturnSingleFileDto() throws Exception {
-
-        var result = noMockService.addFile(new RequestUploadDto("testtest", 125L));
-        log.info("file is null: {}", result == null);
-        log.info("file if: {}", result.getId());
-        mockMvc.perform(get("/file/{ID}", result.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.ID").value(result.getId()))
-                .andReturn();
-    }
+//    @Test
+//    void testShouldPutFileAndReturnSingleFileDto() throws Exception {
+//
+//        var result = noMockService.addFile(new RequestUploadDto("testtest", 125L));
+//        log.info("file is null: {}", result == null);
+//        log.info("file if: {}", result.getId());
+//        mockMvc.perform(get("/file/{ID}", result.getId())
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+////                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+////                .andExpect(jsonPath("$.ID").value(result.getId()))
+//                .andReturn();
+//    }
 }
